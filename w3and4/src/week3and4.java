@@ -2,120 +2,113 @@ import java.util.*;
 
 public class week3and4 {
 
-    static class Transaction {
+    // Client class
+    static class Client {
 
-        String id;
-        double fee;
-        String timestamp;
+        String name;
+        int riskScore;
+        double accountBalance;
 
-        Transaction(String id,double fee,String timestamp)
+        Client(String name,int riskScore,double accountBalance)
         {
-            this.id=id;
-            this.fee=fee;
-            this.timestamp=timestamp;
+            this.name=name;
+            this.riskScore=riskScore;
+            this.accountBalance=accountBalance;
         }
 
         public String toString()
         {
-            return id+" : "+fee+" @ "+timestamp;
+            return name+" : Risk="+riskScore+
+                    " Balance="+accountBalance;
         }
     }
 
-    // Bubble Sort (for small batches)
-    static void bubbleSort(ArrayList<Transaction> list)
+    // Bubble Sort (Ascending risk score)
+    static void bubbleSort(Client arr[])
     {
-        int n=list.size();
+        int n=arr.length;
         int swaps=0;
-        int passes=0;
 
         for(int i=0;i<n-1;i++)
         {
-            boolean swapped=false;
-            passes++;
-
             for(int j=0;j<n-i-1;j++)
             {
-                if(list.get(j).fee > list.get(j+1).fee)
+                if(arr[j].riskScore > arr[j+1].riskScore)
                 {
-                    Transaction temp=list.get(j);
-
-                    list.set(j,list.get(j+1));
-
-                    list.set(j+1,temp);
+                    Client temp=arr[j];
+                    arr[j]=arr[j+1];
+                    arr[j+1]=temp;
 
                     swaps++;
-                    swapped=true;
+
+                    // visualize swap
+                    System.out.println("Swap: "+arr[j].name+
+                            " with "+arr[j+1].name);
                 }
             }
-
-            if(!swapped)
-                break;
         }
 
-        System.out.println("Bubble Sort Result:");
-        System.out.println(list);
+        System.out.println("\nBubble Sort Result:");
+        for(Client c:arr)
+            System.out.println(c);
 
-        System.out.println("Passes: "+passes);
-        System.out.println("Swaps: "+swaps);
+        System.out.println("Total swaps: "+swaps);
     }
 
-    // Insertion Sort (fee + timestamp stable)
-    static void insertionSort(ArrayList<Transaction> list)
+    // Insertion Sort (Descending risk + balance)
+    static void insertionSort(Client arr[])
     {
-        for(int i=1;i<list.size();i++)
+        int n=arr.length;
+
+        for(int i=1;i<n;i++)
         {
-            Transaction key=list.get(i);
+            Client key=arr[i];
 
             int j=i-1;
 
-            while(j>=0 && list.get(j).fee > key.fee)
+            while(j>=0 && arr[j].riskScore < key.riskScore)
             {
-                list.set(j+1,list.get(j));
-
+                arr[j+1]=arr[j];
                 j--;
             }
 
-            list.set(j+1,key);
+            arr[j+1]=key;
         }
 
-        System.out.println("\nInsertion Sort Result:");
-        System.out.println(list);
+        System.out.println("\nInsertion Sort (Descending Risk):");
+
+        for(Client c:arr)
+            System.out.println(c);
     }
 
-    // High fee detection
-    static void highFee(ArrayList<Transaction> list)
+    // Top risk clients
+    static void topRisk(Client arr[])
     {
-        System.out.println("\nHigh Fee Transactions (>50):");
+        System.out.println("\nTop Risk Clients:");
 
-        boolean found=false;
+        int limit=Math.min(10,arr.length);
 
-        for(Transaction t:list)
+        for(int i=0;i<limit;i++)
         {
-            if(t.fee>50)
-            {
-                System.out.println(t);
-                found=true;
-            }
+            System.out.println(arr[i]);
         }
-
-        if(!found)
-            System.out.println("None");
     }
 
     public static void main(String args[])
     {
 
-        ArrayList<Transaction> list=new ArrayList<>();
+        Client clients[] =
+                {
+                        new Client("ClientC",80,50000),
+                        new Client("ClientA",20,90000),
+                        new Client("ClientB",50,70000)
+                };
 
-        list.add(new Transaction("id1",10.5,"10:00"));
-        list.add(new Transaction("id2",25.0,"09:30"));
-        list.add(new Transaction("id3",5.0,"10:15"));
+        bubbleSort(clients);
 
-        bubbleSort(list);
+        insertionSort(clients);
 
-        insertionSort(list);
-
-        highFee(list);
+        topRisk(clients);
 
     }
 }
