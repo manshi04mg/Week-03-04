@@ -2,43 +2,32 @@ import java.util.*;
 
 public class week3and4 {
 
-    // Linear Search (first occurrence)
-    static void linearSearch(String arr[], String target)
+    // Linear Search (unsorted)
+    static void linearSearch(int arr[], int target)
     {
-        int first=-1;
-        int last=-1;
         int comparisons=0;
+        boolean found=false;
 
         for(int i=0;i<arr.length;i++)
         {
             comparisons++;
 
-            if(arr[i].equals(target))
+            if(arr[i]==target)
             {
-                if(first==-1)
-                    first=i;
-
-                last=i;
+                System.out.println("Linear Search: Found at index "+i);
+                found=true;
+                break;
             }
         }
 
-        System.out.println("Linear Search:");
-
-        if(first!=-1)
-        {
-            System.out.println("First occurrence index: "+first);
-            System.out.println("Last occurrence index: "+last);
-        }
-        else
-        {
-            System.out.println("Not found");
-        }
+        if(!found)
+            System.out.println("Linear Search: Not found");
 
         System.out.println("Comparisons: "+comparisons);
     }
 
-    // Binary Search
-    static int binarySearch(String arr[],String target)
+    // Binary Search insertion position
+    static int binaryInsertion(int arr[], int target)
     {
         int low=0;
         int high=arr.length-1;
@@ -51,15 +40,14 @@ public class week3and4 {
 
             comparisons++;
 
-            if(arr[mid].equals(target))
+            if(arr[mid]==target)
             {
-                System.out.println("\nBinary Search:");
-                System.out.println("Found at index: "+mid);
+                System.out.println("\nBinary Search: Found at "+mid);
                 System.out.println("Comparisons: "+comparisons);
-
                 return mid;
             }
-            else if(arr[mid].compareTo(target)<0)
+
+            else if(arr[mid]<target)
             {
                 low=mid+1;
             }
@@ -69,62 +57,55 @@ public class week3and4 {
             }
         }
 
-        System.out.println("Not found");
-        return -1;
+        System.out.println("\nInsertion position: "+low);
+        System.out.println("Comparisons: "+comparisons);
+
+        return low;
     }
 
-    // Count duplicates after binary search
-    static void countOccurrences(String arr[],String target,int index)
+    // Floor and Ceiling
+    static void floorCeiling(int arr[], int target)
     {
-        if(index==-1)
-            return;
+        Integer floor=null;
+        Integer ceiling=null;
 
-        int count=1;
-
-        int left=index-1;
-
-        while(left>=0 && arr[left].equals(target))
+        for(int i=0;i<arr.length;i++)
         {
-            count++;
-            left--;
+            if(arr[i]<=target)
+                floor=arr[i];
+
+            if(arr[i]>=target)
+            {
+                ceiling=arr[i];
+                break;
+            }
         }
 
-        int right=index+1;
-
-        while(right<arr.length && arr[right].equals(target))
-        {
-            count++;
-            right++;
-        }
-
-        System.out.println("Total occurrences: "+count);
+        System.out.println("Floor value: "+floor);
+        System.out.println("Ceiling value: "+ceiling);
     }
 
     public static void main(String args[])
     {
 
-        String logs[]=
-                {
-                        "accB",
-                        "accA",
-                        "accB",
-                        "accC"
-                };
+        int risks[]={50,10,100,25};
 
-        // Linear search (unsorted)
-        linearSearch(logs,"accB");
+        // Linear search on unsorted
+        linearSearch(risks,30);
 
-        // Sort for binary search
-        Arrays.sort(logs);
+        // Sort for binary
+        Arrays.sort(risks);
 
-        System.out.println("\nSorted Logs:");
+        System.out.println("\nSorted Risks:");
 
-        for(String s:logs)
-            System.out.println(s);
+        for(int r:risks)
+            System.out.print(r+" ");
 
-        int index=binarySearch(logs,"accB");
+        // Binary insertion
+        binaryInsertion(risks,30);
 
-        countOccurrences(logs,"accB",index);
+        // Floor ceiling
+        floorCeiling(risks,30);
 
     }
 }
